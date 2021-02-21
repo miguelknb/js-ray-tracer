@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Javascript Raytracer</title>
+</head>
+
+<script type="module" src="app.js" ></script>
+
+<body>
+    <h1>A Simple Javascript Raytracer</h1>
+    <p>This is path I went through to build the entire Raytracer.</p>
+    <h3>First Step: Test canvas with pixel map</h6>
+    <p>Instead of telling the canvas wich color to use as background, I'm taking each individual pixel and setting a value from 0 to 255 to it.</p>
+    <canvas id="canvas">
+    </canvas>
+    <form>
+        <input type="button" value="Random Color" onclick="randomColor();"></input>
+        <input type="button" value="Red" onclick="redClearColor();"></input>
+        <input type="button" value="Green" onclick="greenClearColor();"></input>
+        <input type="button" value="Blue" onclick="blueClearColor();"></input>
+    </form>
+    <form>
+        <input type="number" name="width"> </input>
+        <input type="number" name="height"> </input>
+        <input type="button" value="Set Dimensions" onclick="setDimensions(this.form);"></input>
+    </form>
+    
+</body>
+
+</html>
