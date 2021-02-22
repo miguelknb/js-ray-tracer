@@ -35,3 +35,11 @@ export const cross = (v1, v2) => {
                     v1.p2 * v2.p0 - v1.p0 * v2.p2,
                     v1.p0 * v2.p1 - v1.p1 * v2.p0);
 }
+
+export const sum = (v1) => {
+    return v1.p0 + v1.p1 + v1.p2;
+}
+
+export const square = (v1) => {
+    return new Vec3(v1.p0 * v1.p0, v1.p1 * v1.p1, v1.p2 * v1.p2);
+}

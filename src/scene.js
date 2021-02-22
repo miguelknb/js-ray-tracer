@@ -1,5 +1,7 @@
 export class Scene { 
-    constructor() { }
+    constructor() { 
+        this.objects = [];
+    }
 
     addObject(obj) {
         this.objects.push(obj);
@@ -25,18 +27,24 @@ export class Scene {
         //Checking interception distances from all objects
         //If object is not intercepted, distance is infinity
         for (var i = 0; i < this.objects.length; i++) {
-            distances.push(objects[i].interceptDistance(ray));
+
+            distances.push(this.objects[i].interceptDistance(ray));
+
             //TODO Reduzir função em apenas 1 for
         }
-
         for (var j = 0; j < distances.length; j++) {
-            if ( distances[i] && distances[i] > minDistance) {
-                minDistance = distance
-                nearestObject = this.objects[i]
+            if ( distances[j] && distances[j] < minDistance) {
+                minDistance = distances[j];
+                nearestObject = this.objects[j];
             } 
         }
 
-        return {nearestObject : nearestObject, distance : minDistance}
+        const data = {
+            object: nearestObject,
+            distances: minDistance
+        }
+
+        return data
         
     }
 

@@ -3,6 +3,7 @@ import * as alg from './vec3.js'
 import {Vec3} from './vec3.js'
 import {Scene} from './scene.js'
 import {Camera} from './camera.js'
+import {Sphere} from './primitives/sphere.js'
 
 
 
@@ -17,8 +18,9 @@ var v1 = new Vec3(1, 1, 1);
 // console.log(alg.dot(new Vec3(1, 2, 3), new Vec3(1, 5, 7)));
 // console.log(alg.cross( new Vec3(1, 2, 2), new Vec3(2, 1, 1)))
 //
-
+//console.log(alg.square(new Vec3(1, 2, 3)))
 //test camera
+
 
 
 var cam = new Camera(300, 300, 90, 30);
@@ -38,12 +40,17 @@ const options = {
 
 let scene = new Scene();
 
+var sphere1 = new Sphere(new Vec3(0, 20, 0), 25);
+
+var sphere2 = new Sphere(new Vec3(90, 10, 0), 25);
+
 scene.setBackgroundColor([105, 105, 105]);
-scene.setCamera(cam)
+scene.setCamera(cam);
+scene.addObject(sphere1);
+scene.addObject(sphere2);
 
 
-
-
+//Actual usable code
 var canvas;
 var ctx;
 

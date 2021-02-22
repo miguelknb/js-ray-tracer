@@ -3,10 +3,15 @@ export var GenerateRandomColor = () => {
     console.log(number)
 }
 
-var RayColor = (ray, obj, distance, scene) => {
-    if (!obj || !distance) {
-        return scene.backgroundColor;
+var RayColor = (ray, scene) => {
+    let data = scene.intercept(ray);
+    
+    if (!data.object) {
+        return scene.backgroundColor 
     }
+    
+    return ([255, 0, 0]);
+
 }
 
 
@@ -29,7 +34,7 @@ export var Render = (canvas, ctx, scene, options) => {
 
             var ray = camera.shootRay(x, y);
 
-            var pixelColor = RayColor(ray, obj, distance, scene);
+            var pixelColor = RayColor(ray, scene);
 
             buffer[pos] = pixelColor[0];              // some R value [0, 255]
             buffer[pos + 1] = pixelColor[1];          // some G value
