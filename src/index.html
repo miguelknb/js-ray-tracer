@@ -16,11 +16,16 @@
     <form>
         <input type="button" value="Render" onclick="render();"></input>
     </form>
-    <!-- <form>
-        <input type="number" name="width"> </input>
-        <input type="number" name="height"> </input>
-        <input type="button" value="Set Dimensions" onclick="setDimensions(this.form);"></input>
-    </form> -->
+    <form>
+        <input value="X" type="number" name="x"> </input>
+        <input type="number" name="y"> </input>
+        <input type="number" name="z"> </input>
+        <input type="button" value="Set sphere" onclick="setSphere(this.form);"></input>
+    </form>
+    <div class="objList">
+        <p>Visible Objects</p>
+        
+    </div>
     
 </body>
 

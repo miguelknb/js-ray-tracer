@@ -1,25 +1,9 @@
 import * as alg from './library/vec3.js'
 
-var RayColor = (ray, scene) => {
-    let data = scene.intercept(ray);
-    
-    if (!data.object || !data.hit) {
-        //todo Adicionar cond ret DOESNT INTERCEPT
-        return scene.backgroundColor 
-    }
+var RayColor = (ray, rayData, scene) => {
 
-    var object = data.object;
-    var distanceToObject = data.distance;
-
-    
-
-    //Phong attributtes
-    // const phongAttributes = {
-    //     ks : object.material.specular,
-    //     kd : object.material.diffuse,
-    //     ka : object.material.ambient,
-    //     alpha : object.material.shininess,
-    // };
+    var object = rayData.object;
+    var distanceToObject = rayData.distance;
 
     var ks =    object.material.specular;
     var kd =    object.material.diffuse;
@@ -28,7 +12,6 @@ var RayColor = (ray, scene) => {
     
     var hitPoint = alg.add(ray.origin, alg.scale(ray.direction, distanceToObject));
 
-    //console.log('obj color', hitPoint)
     //todo Texture check
 
     var color = new alg.Vec3(0, 0, 0);
@@ -92,6 +75,7 @@ export var Render = (canvas, ctx, scene, options) => {
     var buffer = new Uint8ClampedArray(width * height * 4);
     var idata = ctx.createImageData(width, height);
     
+    var visibleObjects = [];
 
     const camera = scene.camera;
 
@@ -103,15 +87,42 @@ export var Render = (canvas, ctx, scene, options) => {
 
             var ray = camera.shootRay(x, y);
 
-            var pixelColor = RayColor(ray, scene);
+            let data = scene.intercept(ray);
 
-            buffer[pos] = pixelColor.p0;              // some R value [0, 255]
-            buffer[pos + 1] = pixelColor.p1;          // some G value
-            buffer[pos + 2] = pixelColor.p2;          // some B value
-            buffer[pos + 3] = 255;          // Alpha
+            //if (data.hit) console.log('a',data);
+
+            let rayData = {
+                hit : data.hit,
+                finalColor: scene.backgroundColor,
+                object : data.object,
+                distance: data.distance,
+                reflectedRay : null
+            }
+            
+            if (rayData.object && rayData.hit) {
+                //ray hit object
+                //console.log(rayData)
+                //break;
+
+                if  (rayData.object.firstHit) {
+                    //first hit on object
+                    console.log('oi');
+                    rayData.object.hit(x, y);
+                    visibleObjects.push(rayData.object);
+                }
+                
+                rayData.finalColor = RayColor(ray, rayData, scene);
+            }
+
+            buffer[pos] = rayData.finalColor.p0;         // some R value [0, 255]
+            buffer[pos + 1] = rayData.finalColor.p1;     // some G value
+            buffer[pos + 2] = rayData.finalColor.p2;     // some B value
+            buffer[pos + 3] = 255;                       // Alpha
 
         }
     }
+
+    console.log(visibleObjects)
 
     idata.data.set(buffer);
 

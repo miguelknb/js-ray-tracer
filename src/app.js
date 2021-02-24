@@ -43,29 +43,30 @@ var up = new Vec3(0, 1, 0);
 
 cam.setPosition(eye, center, up)
 
-var ray = cam.shootRay(200, 200);
-
-console.log(ray)
-
 const options = {
     initialColor : [Math.floor(Math.random() * 256) , Math.floor(Math.random() * 256),  Math.floor(Math.random() * 256) ]
 }
 
 let scene = new Scene();
 
-var sphere1 = new Sphere(new Vec3(0, 20, 0), 25);
+
+let sphere1 = new Sphere(new Vec3(0, 20, 0), 25);
+let sphere2 = new Sphere(new Vec3(80, 20, 0), 25);
+
 
 // var sphere2 = new Sphere(new Vec3(90, 10, 0), 25);
 
-var light = new Light(new Vec3(60, 120, 40), new Vec3(1,1,1), new Vec3(1,1,1), new Vec3(1,1,1));
+var light = new Light(new Vec3(60, 20, 40), new Vec3(1,1,1), new Vec3(1,1,1), new Vec3(1,1,1));
 
 var redMaterial = new Material( new Vec3(0.2, 0, 0), new Vec3(0.9, 0.0, 0.0), new Vec3(1, 1, 1), 100, 0);
 
 sphere1.addMaterial(redMaterial);
+sphere2.addMaterial(redMaterial);
 
 scene.setBackgroundColor([105, 105, 105]);
 scene.setCamera(cam);
 scene.addObject(sphere1);
+scene.addObject(sphere2);
 scene.addLight(light);
 scene.setAmbientLight(new Vec3(0.2, 0.2, 0.2));
 // scene.addObject(sphere2);
@@ -78,6 +79,12 @@ var ctx;
 
 let canvasWidth = 300;
 let canvasHeight = 300;
+
+window.setSphere = function(form) {
+    var newPos = new Vec3(parseInt(form.x.value), parseInt(form.y.value), parseInt(form.z.value)) 
+    sphere1.setPosition(newPos);
+    console.log(sphere1)
+}
 
 window.setDimensions = function(form) {
     if (form.width.value > 0 && form.height.value > 0) {

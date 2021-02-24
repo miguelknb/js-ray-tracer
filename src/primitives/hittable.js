@@ -1,6 +1,13 @@
 
 export class Hittable {
-    super() { }
+    constructor() {
+        this.firstHit = true;
+     }
+
+    hit(x, y) {
+        this.firstHit = false;
+        this.firstHitPoint = [x, y];
+    }
 
     intersect() { }
 

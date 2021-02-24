@@ -29,4 +29,10 @@ export class Sphere extends Hittable {
     getNormal(point) {
         return alg.normalize(alg.subtract(point, this.center));
     }
+
+    setPosition(newPos) {
+        this.center.p0 = newPos.p0
+        this.center.p1 = newPos.p1
+        this.center.p2 = newPos.p2
+    }
 }
