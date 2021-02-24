@@ -1,11 +1,23 @@
-import {Render, GenerateRandomColor} from './renderer.js'
-import * as alg from './vec3.js'
-import {Vec3} from './vec3.js'
+import {Render} from './renderer.js'
+import * as alg from './library/vec3.js'
+import {Vec3} from './library/vec3.js'
 import {Scene} from './scene.js'
 import {Camera} from './camera.js'
 import {Sphere} from './primitives/sphere.js'
+import {Material} from './primitives/material.js'
+import { Light } from './primitives/light.js'
 
 
+var clipColor = (number) => {
+    if (number > 1) {
+        number = 1;
+    }
+    if (number < 0) {
+        number = 0;
+    }
+
+    return number;
+}
 
 //testing vec3
 var v1 = new Vec3(1, 1, 1);
@@ -19,9 +31,10 @@ var v1 = new Vec3(1, 1, 1);
 // console.log(alg.cross( new Vec3(1, 2, 2), new Vec3(2, 1, 1)))
 //
 //console.log(alg.square(new Vec3(1, 2, 3)))
+//console.log(alg.addNumber(new Vec3(1, 2, 3), 2));
+
+//console.log( alg.scale( new Vec3(255, 0, 0), 1/255));
 //test camera
-
-
 
 var cam = new Camera(300, 300, 90, 30);
 var eye = new Vec3(100, 40, 40);
@@ -42,20 +55,29 @@ let scene = new Scene();
 
 var sphere1 = new Sphere(new Vec3(0, 20, 0), 25);
 
-var sphere2 = new Sphere(new Vec3(90, 10, 0), 25);
+// var sphere2 = new Sphere(new Vec3(90, 10, 0), 25);
+
+var light = new Light(new Vec3(60, 120, 40), new Vec3(1,1,1), new Vec3(1,1,1), new Vec3(1,1,1));
+
+var redMaterial = new Material( new Vec3(0.2, 0, 0), new Vec3(0.9, 0.0, 0.0), new Vec3(1, 1, 1), 100, 0);
+
+sphere1.addMaterial(redMaterial);
 
 scene.setBackgroundColor([105, 105, 105]);
 scene.setCamera(cam);
 scene.addObject(sphere1);
-scene.addObject(sphere2);
+scene.addLight(light);
+scene.setAmbientLight(new Vec3(0.2, 0.2, 0.2));
+// scene.addObject(sphere2);
 
 
-//Actual usable code
+
+//Actual app code
 var canvas;
 var ctx;
 
-let canvasWidth = 800;
-let canvasHeight = 400;
+let canvasWidth = 300;
+let canvasHeight = 300;
 
 window.setDimensions = function(form) {
     if (form.width.value > 0 && form.height.value > 0) {

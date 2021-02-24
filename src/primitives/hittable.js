@@ -4,6 +4,10 @@ export class Hittable {
 
     intersect() { }
 
-    addMaterial() { }
+    addMaterial(material) {
+        this.material = material;
+    }
+    
+    getNormal() { }
     
 }

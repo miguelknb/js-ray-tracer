@@ -1,5 +1,5 @@
-import * as alg from './vec3.js'
-import {Vec3} from './vec3.js'
+import * as alg from './library/vec3.js'
+import {Vec3} from './library/vec3.js'
 import {Ray} from './ray.js'
 
 export class Camera {

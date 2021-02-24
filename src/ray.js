@@ -1,4 +1,4 @@
-import * as alg from './vec3.js'
+import * as alg from './library/vec3.js'
 
 export class Ray {
     constructor(origin, direction) {

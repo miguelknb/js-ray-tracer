@@ -1,5 +1,5 @@
 import {Hittable} from './hittable.js'
-import * as alg from '../vec3.js'
+import * as alg from '../library/vec3.js'
 export class Sphere extends Hittable {
     constructor(center, radius) {
         super();
@@ -24,5 +24,9 @@ export class Sphere extends Hittable {
             return Math.min(t1, t2);
         }
         return Number.MAX_VALUE;
+    }
+
+    getNormal(point) {
+        return alg.normalize(alg.subtract(point, this.center));
     }
 }
