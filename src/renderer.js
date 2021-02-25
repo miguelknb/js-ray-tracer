@@ -25,34 +25,37 @@ var RayColor = (ray, rayData, scene) => {
 
     
     //TODO iterate lights
-    var light = scene.lights[0];
-    //
 
-    var lightDirection = alg.normalize(alg.subtract(light.position, biasedPoint));
-    
-    
-    //TODO add reflection
-    var lightDistance = alg.norm(alg.subtract(light.position, hitPoint)) //biased point???
-    
-    //nextObj
-    
-    var cameraDirection = alg.normalize(alg.subtract(ray.origin, hitPoint));
-    
-    //Phong illumination model
-    
-    var Rm = alg.subtract( alg.scale(surfaceNormal, (2 * alg.dot(lightDirection, surfaceNormal) )), lightDirection );
-    
-    //Diffuse light
-    var diffusePart = alg.scale(kd, alg.dot(alg.normalize(lightDirection), surfaceNormal))
-    color = alg.add(color, alg.multiply(light.diffuse, diffusePart))
-    
-    //Specular Light
-    color = alg.add(color, alg.scale(alg.multiply(light.specular, ks), alg.dot(Rm, cameraDirection) ** alpha));
+    for (var i = 0; i < scene.lights.length; i++) {
 
-    //Apply shadow
-    color = alg.scale(color, shadow);
-    
-    //end light iteration
+        var light =  scene.lights[i];
+        //
+        
+        var lightDirection = alg.normalize(alg.subtract(light.position, biasedPoint));
+        
+        
+        //TODO add reflection
+        var lightDistance = alg.norm(alg.subtract(light.position, hitPoint)) //biased point???
+        
+        //nextObj
+        
+        var cameraDirection = alg.normalize(alg.subtract(ray.origin, hitPoint));
+        
+        //Phong illumination model
+        
+        var Rm = alg.subtract( alg.scale(surfaceNormal, (2 * alg.dot(lightDirection, surfaceNormal) )), lightDirection );
+        
+        //Diffuse light
+        var diffusePart = alg.scale(kd, alg.dot(alg.normalize(lightDirection), surfaceNormal))
+        color = alg.add(color, alg.multiply(light.diffuse, diffusePart))
+        
+        //Specular Light
+        color = alg.add(color, alg.scale(alg.multiply(light.specular, ks), alg.dot(Rm, cameraDirection) ** alpha));
+        
+        //Apply shadow
+        color = alg.scale(color, shadow);
+        //end light iteration
+    }
 
     color = alg.add(color, alg.multiply(ka, light.ambient));
     
@@ -67,16 +70,18 @@ var RayColor = (ray, rayData, scene) => {
 }
 
 
-export var Render = (canvas, ctx, scene, options) => {
+export var Render = (canvas, ctx, scene) => {
 
     var width = canvas.width
     var height = canvas.height
 
+    var renderData = {
+        visibleObjects : [],
+    }
+
     var buffer = new Uint8ClampedArray(width * height * 4);
     var idata = ctx.createImageData(width, height);
     
-    var visibleObjects = [];
-
     const camera = scene.camera;
 
     for (var y = 0; y < height; y++) {
@@ -89,8 +94,6 @@ export var Render = (canvas, ctx, scene, options) => {
 
             let data = scene.intercept(ray);
 
-            //if (data.hit) console.log('a',data);
-
             let rayData = {
                 hit : data.hit,
                 finalColor: scene.backgroundColor,
@@ -101,14 +104,12 @@ export var Render = (canvas, ctx, scene, options) => {
             
             if (rayData.object && rayData.hit) {
                 //ray hit object
-                //console.log(rayData)
-                //break;
 
                 if  (rayData.object.firstHit) {
                     //first hit on object
                     console.log('oi');
                     rayData.object.hit(x, y);
-                    visibleObjects.push(rayData.object);
+                    renderData.visibleObjects.push(rayData.object);
                 }
                 
                 rayData.finalColor = RayColor(ray, rayData, scene);
@@ -122,11 +123,13 @@ export var Render = (canvas, ctx, scene, options) => {
         }
     }
 
-    console.log(visibleObjects)
+    console.log(renderData.visibleObjects)
 
     idata.data.set(buffer);
 
     ctx.putImageData(idata, 0, 0);
 
     var dataUri = canvas.toDataURL();
+
+    return renderData;
 }

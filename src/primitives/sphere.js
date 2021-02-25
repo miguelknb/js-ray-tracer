@@ -1,8 +1,8 @@
 import {Hittable} from './hittable.js'
 import * as alg from '../library/vec3.js'
 export class Sphere extends Hittable {
-    constructor(center, radius) {
-        super();
+    constructor(name, center, radius) {
+        super(name);
         this.center = center;
         this.radius = radius;
     }

@@ -1,6 +1,7 @@
 
 export class Hittable {
-    constructor() {
+    constructor(name) {
+        this.name = name;
         this.firstHit = true;
      }
 

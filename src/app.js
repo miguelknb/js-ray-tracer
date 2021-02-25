@@ -36,39 +36,39 @@ var v1 = new Vec3(1, 1, 1);
 //console.log( alg.scale( new Vec3(255, 0, 0), 1/255));
 //test camera
 
-var cam = new Camera(300, 300, 90, 30);
-var eye = new Vec3(100, 40, 40);
+var cam = new Camera(800, 600, 90, 90);
+var eye = new Vec3(0, 0, -50);
 var center = new Vec3(0, 0, 0);
 var up = new Vec3(0, 1, 0);
 
 cam.setPosition(eye, center, up)
 
-const options = {
-    initialColor : [Math.floor(Math.random() * 256) , Math.floor(Math.random() * 256),  Math.floor(Math.random() * 256) ]
-}
-
 let scene = new Scene();
 
 
-let sphere1 = new Sphere(new Vec3(0, 20, 0), 25);
-let sphere2 = new Sphere(new Vec3(80, 20, 0), 25);
+let sphere1 = new Sphere('Esfera 1', new Vec3(-30, 0, 10), 20);
+let sphere2 = new Sphere('Esfera 2', new Vec3(30, 0, 10), 25);
 
 
 // var sphere2 = new Sphere(new Vec3(90, 10, 0), 25);
 
-var light = new Light(new Vec3(60, 20, 40), new Vec3(1,1,1), new Vec3(1,1,1), new Vec3(1,1,1));
+var light1 = new Light(new Vec3(40, 20, -40), new Vec3(1,1,1), new Vec3(1,1,1), new Vec3(1,1,1));
 
-var redMaterial = new Material( new Vec3(0.2, 0, 0), new Vec3(0.9, 0.0, 0.0), new Vec3(1, 1, 1), 100, 0);
+var light2 = new Light(new Vec3(20, 20, -40), new Vec3(1,1,1), new Vec3(1,1,1), new Vec3(1,1,1));
+
+var redMaterial = new Material( new Vec3(0.2, 0.0, 0.0), new Vec3(0.8, 0.0, 0.0), new Vec3(1, 1, 1), 100, 0);
+var blueMaterial = new Material( new Vec3(0.0, 0.0, 0.3), new Vec3(0.0, 0.0, 0.8), new Vec3(1, 1, 1), 100, 0);
 
 sphere1.addMaterial(redMaterial);
-sphere2.addMaterial(redMaterial);
+sphere2.addMaterial(blueMaterial);
 
-scene.setBackgroundColor([105, 105, 105]);
 scene.setCamera(cam);
 scene.addObject(sphere1);
 scene.addObject(sphere2);
-scene.addLight(light);
+scene.addLight(light1);
+scene.addLight(light2);
 scene.setAmbientLight(new Vec3(0.2, 0.2, 0.2));
+scene.setBackgroundColor(new Vec3(0.2, 0.2, 0.2));
 // scene.addObject(sphere2);
 
 
@@ -77,8 +77,10 @@ scene.setAmbientLight(new Vec3(0.2, 0.2, 0.2));
 var canvas;
 var ctx;
 
-let canvasWidth = 300;
-let canvasHeight = 300;
+let canvasWidth = 800;
+let canvasHeight = 600;
+let renderData;
+
 
 window.setSphere = function(form) {
     var newPos = new Vec3(parseInt(form.x.value), parseInt(form.y.value), parseInt(form.z.value)) 
@@ -95,8 +97,22 @@ window.setDimensions = function(form) {
 }
 
 window.render = function () {
-    Render(canvas, ctx, scene, options);
+    renderData = Render(canvas, ctx, scene);
+    var objList = document.getElementById("ObjectList");
+    objList.style.display = "flex";
+    objList.style.flexDirection = "column"; 
+
+    for(var i = 0; i < renderData.visibleObjects.length; i++ ) {
+        var textnode = document.createTextNode(renderData.visibleObjects[i].name)
+        var objName = document.createElement("P")
+        objName.appendChild(textnode)
+        objList.appendChild(objName)
+        //objList.appendChild(textnode);
+        
+    }
+    //document.getElementById("ObjectList").append(objList);
 }
+
 
 window.onload = function() {
     canvas = document.getElementById('canvas');
