@@ -5,33 +5,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Javascript Raytracer</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
-<script type="module" src="app.js" ></script>
+<script type="module" src="app.js"></script>
 
 <body>
-    <h1>A Simple Javascript Raytracer</h1>
-    <canvas id="canvas">
-    </canvas>
-    <form>
-        <input type="button" value="Render" onclick="render();"></input>
-    </form>
-    <form>
-        <input value="X" type="number" name="x"> </input>
-        <input type="number" name="y"> </input>
-        <input type="number" name="z"> </input>
-        <input type="button" value="Set sphere" onclick="setSphere(this.form);"></input>
-    </form>
-    <div>
-        <div id="ObjectList">
-            <p>Visible Objects</p>
-    
+    <div class="mainContainer">
+        <h1>A Simple Javascript Raytracer</h1>
+        <div class="mainSection">
+            <canvas id="canvas"></canvas>
+            <div class="createContainer">
+                <p>Add objects to scene</p>
+                <form id="typeForm">
+                    <div class="creationList" id="createList">
+                        <select name="type" onchange="changeObjectInput(this.form);">
+                            <option value="default" selected="selected">Type</option>
+                            <option value="sphere">Sphere</option>
+                            <option value="box">Box</option>
+                            <option value="mesh">Mesh</option>
+                        </select>
+                    </div>
+                </form>
+                <div class="objectPropertiesContainer">
+                    <form id="objForm">
+                        <div class="objectInputContainer">
+                            <!-- <label class="inputLabel" for="xcenter">X</label>
+                            <input class="objectInput" id="xcenter">   -->
+                        </div>
+                    </form>
+                </div>
+                <button class="createButton" onclick="createObject();">Create Object</button>
+            </div>
         </div>
-        <div id="CreationContainer">
-            <p>Add objects to scene</p>
+        <form>
+            <div class="stackForm">
+                <input type="button" value="Render" onclick="render();"></input>
+            </div>
+        </form>
+        <div class="flexRow">
+            <div id="visibleObjectList">
+                <p>Visible Objects</p>
+
+            </div>
+            <div>
+                <p>Objects in scene</p>
+                <div id="objectList">
+                    <div class="objectContainer">
+                        <div class="flexRow">
+                            <!-- <p class="expandButton" onclick="expandObject">V</p> -->
+                        </div>
+                        <!-- <div class="expandObject">
+                            <p>Property 1</p>
+                            <p>Property 2</p>
+                            <p>Property 1</p>
+                            <div class="materialDisplay">
+                                <div class="colorSquare"></div>
+                                <div class="colorSquare"></div>
+                                <div class="colorSquare"></div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+            <div id="CreationContainer">
+
+            </div>
         </div>
     </div>
-    
 </body>
 
 </html>

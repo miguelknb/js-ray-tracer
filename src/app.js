@@ -7,18 +7,6 @@ import {Sphere} from './primitives/sphere.js'
 import {Material} from './primitives/material.js'
 import { Light } from './primitives/light.js'
 
-
-var clipColor = (number) => {
-    if (number > 1) {
-        number = 1;
-    }
-    if (number < 0) {
-        number = 0;
-    }
-
-    return number;
-}
-
 //testing vec3
 var v1 = new Vec3(1, 1, 1);
 // var v2 = new Vec3(2, 2, 2);
@@ -36,7 +24,7 @@ var v1 = new Vec3(1, 1, 1);
 //console.log( alg.scale( new Vec3(255, 0, 0), 1/255));
 //test camera
 
-var cam = new Camera(800, 600, 90, 90);
+var cam = new Camera(400, 300, 90, 90);
 var eye = new Vec3(0, 0, -50);
 var center = new Vec3(0, 0, 0);
 var up = new Vec3(0, 1, 0);
@@ -63,8 +51,8 @@ sphere1.addMaterial(redMaterial);
 sphere2.addMaterial(blueMaterial);
 
 scene.setCamera(cam);
-scene.addObject(sphere1);
-scene.addObject(sphere2);
+//scene.addObject(sphere1);
+//scene.addObject(sphere2);
 scene.addLight(light1);
 scene.addLight(light2);
 scene.setAmbientLight(new Vec3(0.2, 0.2, 0.2));
@@ -77,9 +65,179 @@ scene.setBackgroundColor(new Vec3(0.2, 0.2, 0.2));
 var canvas;
 var ctx;
 
-let canvasWidth = 800;
-let canvasHeight = 600;
+let canvasWidth = 400;
+let canvasHeight = 300;
 let renderData;
+
+function cleanElement(element) {
+    while(element.firstChild){
+        element.removeChild(element.lastChild)
+    }
+}
+
+
+var createObjectForm = (objectType) => {
+    //console.log(propertyContainer)
+    var objFormProps = document.getElementById("objForm");
+    var objProperties = document.createElement("div");
+    objProperties.classList.add("objectPropertiesContainer");
+
+    
+
+    console.log(objFormProps)
+
+    switch (objectType) {
+        case 'sphere':
+            cleanElement(objFormProps);
+            var xinput = document.createElement("input");
+            var yinput = document.createElement("input");
+            var zinput = document.createElement("input");
+
+            var radiusInput = document.createElement("input");
+
+            xinput.classList.add("objectInput");
+            yinput.classList.add("objectInput");
+            zinput.classList.add("objectInput");
+            radiusInput.classList.add("objectInput");
+
+            xinput.name = "x";
+            yinput.name = "y";
+            zinput.name = "z";
+            radiusInput.name = "radius";
+
+            var xContainer = document.createElement("div");
+            var yContainer = document.createElement("div");
+            var zContainer = document.createElement("div");
+            var radiusContainer = document.createElement("div");
+
+            xContainer.classList.add("objectInputContainer");
+            yContainer.classList.add("objectInputContainer");
+            zContainer.classList.add("objectInputContainer");
+            radiusContainer.classList.add("objectInputContainer");
+
+
+            var xLabel = document.createElement("label");
+            var yLabel = document.createElement("label");
+            var zLabel = document.createElement("label");
+            var radiusLabel = document.createElement("label");
+
+            xLabel.setAttribute("for", "x")
+            xLabel.appendChild(document.createTextNode("X"));
+            yLabel.setAttribute("for", "y")
+            yLabel.appendChild(document.createTextNode("Y"));
+            zLabel.setAttribute("for", "z")
+            zLabel.appendChild(document.createTextNode("Z"));
+            radiusLabel.setAttribute("for", "radius");
+            radiusLabel.appendChild(document.createTextNode("Radius"));
+
+
+            //x
+            xContainer.appendChild(xLabel);
+            xContainer.appendChild(xinput);
+            //y
+            yContainer.appendChild(yLabel);
+            yContainer.appendChild(yinput);
+            //z
+            zContainer.appendChild(zLabel);
+            zContainer.appendChild(zinput);
+            //radius
+            radiusContainer.appendChild(radiusLabel);
+            radiusContainer.appendChild(radiusInput);
+            
+            objProperties.appendChild(xContainer);
+            objProperties.appendChild(yContainer);
+            objProperties.appendChild(zContainer);
+            objProperties.appendChild(radiusContainer);
+
+            break;
+        
+        case 'box':
+            cleanElement(objFormProps);
+
+            var xminnput = document.createElement("input")
+            var xmaxinput = document.createElement("input")
+
+            var ymininput = document.createElement("input")
+            var ymaxinput = document.createElement("input")
+            
+            objProperties.appendChild(xinput)
+
+
+
+            break;
+
+        case 'mesh':
+            cleanElement(objFormProps);
+
+
+            break;
+    
+        default:
+            cleanElement(objFormProps);
+
+
+            break;
+
+        }
+    
+    objFormProps.appendChild(objProperties);
+}
+
+
+window.createObject = function() {
+    var objForm = document.getElementById("objForm");
+    var objList = document.getElementById("objectList");
+    var newObjContainer = document.createElement("div")
+    newObjContainer.classList.add("objectContainer");
+    var objName = document.createElement("p");
+    var typeForm = document.getElementById("typeForm")
+    
+    if (!typeForm.type || !objForm) {
+        console.log('Sem type definido')
+        return
+    }
+
+    var type = typeForm.type.value
+
+    switch (type) {
+        case 'sphere':
+            var center = new Vec3(parseInt(objForm.x.value), parseInt(objForm.y.value), parseInt(objForm.z.value));
+            var radius = objForm.radius.value;
+
+            var name = "Sphere" + Math.floor(Math.random() * 10);  
+            var newSphere = new Sphere(name, center, radius);
+            newSphere.addMaterial(redMaterial); 
+
+            console.log(newSphere)
+            scene.addObject(newSphere);
+            objName.appendChild(document.createTextNode(newSphere.name));
+            newObjContainer.appendChild(objName);
+            objList.appendChild(newObjContainer);
+
+            
+            break;
+
+        case 'box':
+            
+            break;
+
+        case 'mesh':
+            
+            break;
+        
+        
+    
+        default:
+            break;
+    }
+    
+    //cleanElement(objForm);
+}
+
+window.changeObjectInput = function(form) {
+    console.log(form.type.value)
+    createObjectForm(form.type.value);
+}
 
 
 window.setSphere = function(form) {
@@ -98,7 +256,7 @@ window.setDimensions = function(form) {
 
 window.render = function () {
     renderData = Render(canvas, ctx, scene);
-    var objList = document.getElementById("ObjectList");
+    var objList = document.getElementById("visibleObjectList");
     objList.style.display = "flex";
     objList.style.flexDirection = "column"; 
 
